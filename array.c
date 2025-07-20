@@ -24,7 +24,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+ 
 typedef struct {
     int *arr_data; // 数据指针
     int size;
