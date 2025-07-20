@@ -1,0 +1,12 @@
+BasedOnStyle: LLVM
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterFunction: true
+  AfterClass: false
+  AfterControlStatement: false
+AllowShortFunctionsOnASingleLine: false
+IndentWidth: 4
+AlignAfterOpenBracket: Align
+ColumnLimit: 0
+AlwaysBreakAfterReturnType: All
+AlwaysBreakAfterDefinitionReturnType: All
