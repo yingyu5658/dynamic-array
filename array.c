@@ -63,10 +63,10 @@ dynamic_arr_add(dynamic_arr *arr, int32_t data) {
 
         arr->data = temp;
         arr->capacity *= 2;
-        arr->size++;
     }
 
     arr->data[arr->size] = data;
+    arr->size++;
 }
 
 // Example:
