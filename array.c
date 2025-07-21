@@ -22,57 +22,104 @@
 */
 
 #include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
- 
+
 typedef struct {
-    int *arr_data; // 数据指针
-    int size;
-    int capacity;
+    int32_t *data; // 数据指针
+    size_t size;
+    size_t capacity;
 } dynamic_arr;
 
 dynamic_arr *
 dynamic_arr_new(size_t capacity)
 {
-    dynamic_arr *p_da = malloc(sizeof(dynamic_arr)); // 堆分配
+    dynamic_arr *p_da = malloc(sizeof(dynamic_arr));
     if (!p_da) {
+        fprintf(stderr, "Memory allocation failed.\n");
+        return NULL;
+    }
+
+    p_da->data = malloc(sizeof(int32_t) * capacity);
+    if (!p_da->data) {
         free(p_da);
+        fprintf(stderr, "Memory allocation failed.\n");
         return NULL;
     }
 
     p_da->size = 0;            // 当前元素个数
     p_da->capacity = capacity; // 总容量
-
     return p_da;
 }
 
-dynamic_arr *
-dynamic_arr_add(dynamic_arr *arr, int data)
+int32_t
+dynamic_arr_add(dynamic_arr *arr, int32_t data)
 {
     if (arr->size >= arr->capacity) {
         size_t new_cap = arr->capacity * 2;
-        int *new_arr = malloc(sizeof(int) * new_cap);
+        int32_t *new_arr = malloc(sizeof(int32_t) * new_cap);
         if (!new_arr) {
-            return NULL;
+            fprintf(stderr, "Memory allocation failed.\n");
+            return -1;
         }
 
         for (size_t i = 0; i < arr->size; i++) {
-            new_arr[i] = arr->arr_data[i];
+            new_arr[i] = arr->data[i];
         }
 
-        free(arr->arr_data);
-        arr->arr_data = new_arr;
+        free(arr->data);
+        arr->data = new_arr;
         arr->capacity = new_cap;
     }
 
-    arr->arr_data[arr->size] = data;
+    arr->data[arr->size] = data;
     arr->size++;
-
-    return arr;
+    return 0;
 }
 
-int
-main(int argc, char **argv)
+// Example:
+// my_dynamic_arr = dynamic_arr_del(my_dynamic_arr)
+void
+dynamic_arr_del(dynamic_arr *arr)
 {
+    if (arr == NULL) {
+        return;
+    }
+
+    free(arr->data);
+    free(arr);
+}
+
+int32_t
+dynamic_arr_get_item(dynamic_arr *arr, size_t index, int32_t *out_value)
+{
+    if (!arr) {
+        fprintf(stderr, "dynamic_arr was NULL.\n");
+        return -1;
+    }
+    if (index >= arr->size) {
+        fprintf(stderr, "'index' was bigger than arr->size.\n");
+        return -2;
+    }
+
+    *out_value = arr->data[index];
+    return 0;
+}
+
+int32_t
+dynamic_arr_modify_item(dynamic_arr *arr, size_t index, int32_t data)
+{
+    if (!arr) {
+        fprintf(stderr, "dynamic_arr was NULL.\n");
+        return -1;
+    }
+
+    if (index >= arr->size) {
+        fprintf(stderr, "index was bigger than arr->size.");
+        return -2;
+    }
+
+    arr->data[index] = data;
     return 0;
 }
