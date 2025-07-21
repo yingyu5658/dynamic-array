@@ -33,8 +33,7 @@ typedef struct {
 } dynamic_arr;
 
 dynamic_arr *
-dynamic_arr_new(size_t capacity)
-{
+dynamic_arr_new(size_t capacity) {
     dynamic_arr *p_da = malloc(sizeof(dynamic_arr));
     if (!p_da) {
         fprintf(stderr, "Memory allocation failed.\n");
@@ -53,36 +52,26 @@ dynamic_arr_new(size_t capacity)
     return p_da;
 }
 
-int32_t
-dynamic_arr_add(dynamic_arr *arr, int32_t data)
-{
+void
+dynamic_arr_add(dynamic_arr *arr, int32_t data) {
     if (arr->size >= arr->capacity) {
-        size_t new_cap = arr->capacity * 2;
-        int32_t *new_arr = malloc(sizeof(int32_t) * new_cap);
-        if (!new_arr) {
+        int32_t *temp = realloc(arr->data, arr->capacity * 2 * sizeof(int32_t));
+        if (!temp) {
             fprintf(stderr, "Memory allocation failed.\n");
-            return -1;
+            exit(1);
         }
 
-        for (size_t i = 0; i < arr->size; i++) {
-            new_arr[i] = arr->data[i];
-        }
-
-        free(arr->data);
-        arr->data = new_arr;
-        arr->capacity = new_cap;
+        arr->data = temp;
+        arr->capacity *= 2;
     }
 
     arr->data[arr->size] = data;
-    arr->size++;
-    return 0;
 }
 
 // Example:
 // my_dynamic_arr = dynamic_arr_del(my_dynamic_arr)
 void
-dynamic_arr_del(dynamic_arr *arr)
-{
+dynamic_arr_del(dynamic_arr *arr) {
     if (arr == NULL) {
         return;
     }
@@ -92,8 +81,7 @@ dynamic_arr_del(dynamic_arr *arr)
 }
 
 int32_t
-dynamic_arr_get_item(dynamic_arr *arr, size_t index, int32_t *out_value)
-{
+dynamic_arr_get_item(dynamic_arr *arr, size_t index, int32_t *out_value) {
     if (!arr) {
         fprintf(stderr, "dynamic_arr was NULL.\n");
         return -1;
@@ -108,8 +96,7 @@ dynamic_arr_get_item(dynamic_arr *arr, size_t index, int32_t *out_value)
 }
 
 int32_t
-dynamic_arr_modify_item(dynamic_arr *arr, size_t index, int32_t data)
-{
+dynamic_arr_modify_item(dynamic_arr *arr, size_t index, int32_t data) {
     if (!arr) {
         fprintf(stderr, "dynamic_arr was NULL.\n");
         return -1;
